@@ -3,22 +3,19 @@
 
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <cmath>
 #include <exception>
 
 class Bureaucrat
 {
 	private:
-		const std::string name;
+		const std::string _name;
 		int _grade;
 
 	public:
 		Bureaucrat();
 		Bureaucrat(const Bureaucrat &other);
 		Bureaucrat(const std::string& name, int grade);
-		Bureaucrat& operator = (const Bureaucrat &other);
+		Bureaucrat& operator=(const Bureaucrat &other);
 		~Bureaucrat();
 
 		std::string getName() const;
@@ -40,7 +37,7 @@ class Bureaucrat
 
 };
 
-std::ostream& operator << (std::ostream& out, const Bureaucrat& bureaucrat);
+std::ostream& operator<<(std::ostream& out, const Bureaucrat& bureaucrat);
 
 
 # endif
