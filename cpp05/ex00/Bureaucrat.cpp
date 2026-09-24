@@ -59,6 +59,12 @@ void Bureaucrat::decrementGrade()
 		(this->_grade)++;
 }
 
+Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other)
+{
+	if(this != &other)
+		this->_grade = other._grade;
+	return(*this);
+}
 
 std::ostream& operator<<(std::ostream& out, const Bureaucrat& bureaucrat)
 {
