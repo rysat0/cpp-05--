@@ -5,6 +5,8 @@
 #include <string>
 #include <exception>
 
+class Form;
+
 class Bureaucrat
 {
 	private:

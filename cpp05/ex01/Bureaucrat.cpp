@@ -1,4 +1,5 @@
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 const char* Bureaucrat::GradeTooHighException::what() const throw()
 {
