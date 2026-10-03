@@ -3,267 +3,86 @@
 #include "ShrubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
+#include "Intern.hpp"
+#include <ctime>
 
 int main()
 {
-	std::srand(static_cast<unsigned int>(std::time(NULL)));
+	std::cout << "----- Intern creates forms -----" << std::endl;
 
-	std::cout << "----- Default forms -----" << std::endl;
-
-	try
-	{
-		ShrubberyCreationForm shrubbery;
-		RobotomyRequestForm robotomy;
-		PresidentialPardonForm pardon;
-
-		std::cout << shrubbery << std::endl;
-		std::cout << robotomy << std::endl;
-		std::cout << pardon << std::endl;
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-
-
-	std::cout << "\n----- ShrubberyCreationForm -----" << std::endl;
+	AForm* shrubbery = NULL;
+	AForm* robotomy = NULL;
+	AForm* pardon = NULL;
 
 	try
 	{
-		ShrubberyCreationForm form("home");
-
-		Bureaucrat badSigner("BadSigner", 146);
-		Bureaucrat signer("Signer", 145);
-		Bureaucrat badExecutor("BadExecutor", 138);
-		Bureaucrat executor("Executor", 137);
-
-		std::cout << form << std::endl;
-
-		std::cout << "\nExecute unsigned form:" << std::endl;
-		executor.executeForm(form);
-
-		std::cout << "\nSign with insufficient grade:" << std::endl;
-		badSigner.signForm(form);
-		std::cout << form << std::endl;
-
-		std::cout << "\nSign at exact grade:" << std::endl;
-		signer.signForm(form);
-		std::cout << form << std::endl;
-
-		std::cout << "\nExecute with insufficient grade:" << std::endl;
-		badExecutor.executeForm(form);
-
-		std::cout << "\nExecute at exact grade:" << std::endl;
-		executor.executeForm(form);
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-
-	std::cout << "\n----- RobotomyRequestForm -----" << std::endl;
-
-	try
-	{
-		RobotomyRequestForm form("Bender");
-
-		Bureaucrat badSigner("BadSigner", 73);
-		Bureaucrat signer("Signer", 72);
-		Bureaucrat badExecutor("BadExecutor", 46);
-		Bureaucrat executor("Executor", 45);
-
-		std::cout << form << std::endl;
-
-		std::cout << "\nExecute unsigned form:" << std::endl;
-		executor.executeForm(form);
-
-		std::cout << "\nSign with insufficient grade:" << std::endl;
-		badSigner.signForm(form);
-		std::cout << form << std::endl;
-
-		std::cout << "\nSign at exact grade:" << std::endl;
-		signer.signForm(form);
-		std::cout << form << std::endl;
-
-		std::cout << "\nExecute with insufficient grade:" << std::endl;
-		badExecutor.executeForm(form);
-
-		std::cout << "\nExecute at exact grade:" << std::endl;
-		executor.executeForm(form);
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-
-	std::cout << "\n----- PresidentialPardonForm -----" << std::endl;
-
-	try
-	{
-		PresidentialPardonForm form("Arthur");
-
-		Bureaucrat badSigner("BadSigner", 26);
-		Bureaucrat signer("Signer", 25);
-		Bureaucrat badExecutor("BadExecutor", 6);
-		Bureaucrat executor("Executor", 5);
-
-		std::cout << form << std::endl;
-
-		std::cout << "\nExecute unsigned form:" << std::endl;
-		executor.executeForm(form);
-
-		std::cout << "\nSign with insufficient grade:" << std::endl;
-		badSigner.signForm(form);
-		std::cout << form << std::endl;
-
-		std::cout << "\nSign at exact grade:" << std::endl;
-		signer.signForm(form);
-		std::cout << form << std::endl;
-
-		std::cout << "\nExecute with insufficient grade:" << std::endl;
-		badExecutor.executeForm(form);
-
-		std::cout << "\nExecute at exact grade:" << std::endl;
-		executor.executeForm(form);
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-
-	std::cout << "\n----- Robotomy repeated execution -----" << std::endl;
-
-	try
-	{
+		Intern intern;
 		Bureaucrat boss("Boss", 1);
-		RobotomyRequestForm form("Marvin");
 
-		boss.signForm(form);
+		shrubbery = intern.makeForm("shrubbery creation", "intern_garden");
+		robotomy = intern.makeForm("robotomy request", "Bender");
+		pardon = intern.makeForm("presidential pardon", "Arthur");
 
-		for(int i = 0; i < 10; i++)
+		std::cout << "\nExecute created shrubbery form:" << std::endl;
+
+		if(shrubbery != NULL)
 		{
-			std::cout << "\nAttempt " << i + 1 << ":" << std::endl;
-			boss.executeForm(form);
+			std::cout << *shrubbery << std::endl;
+			boss.signForm(*shrubbery);
+			boss.executeForm(*shrubbery);
+		}
+
+
+		std::cout << "\nExecute created robotomy form:" << std::endl;
+		if(robotomy != NULL)
+		{
+			std::cout << *robotomy << std::endl;
+			boss.signForm(*robotomy);
+			boss.executeForm(*robotomy);
+		}
+
+
+		std::cout << "\nExecute created pardon form:" << std::endl;
+		if(pardon != NULL)
+		{
+			std::cout << *pardon << std::endl;
+			boss.signForm(*pardon);
+			boss.executeForm(*pardon);
 		}
 	}
+
 	catch(const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
 
+	delete shrubbery;
+	delete robotomy;
+	delete pardon;
 
-	std::cout << "\n----- Shrubbery copy and assignment -----" << std::endl;
+
+
+	std::cout << "\n----- Intern unknown form -----" << std::endl;
+
+	AForm* unknown = NULL;
 
 	try
 	{
-		Bureaucrat boss("Boss", 1);
-		ShrubberyCreationForm original("garden");
-		ShrubberyCreationForm assigned("old_garden");
+		Intern intern;
 
-		boss.signForm(original);
+		unknown = intern.makeForm("coffee request", "Office");
 
-		ShrubberyCreationForm copied(original);
-
-		std::cout << "Original: " << original << std::endl;
-		std::cout << "Copied: " << copied << std::endl;
-		std::cout << "Before assignment: " << assigned << std::endl;
-
-		assigned = original;
-
-		std::cout << "After assignment: " << assigned << std::endl;
-
-		boss.executeForm(copied);
-		boss.executeForm(assigned);
+		if(unknown == NULL)
+			std::cout << "No form was created." << std::endl;
+		else
+			std::cout << *unknown << std::endl;
 	}
 	catch(const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
 
-
-	std::cout << "\n----- Robotomy copy and assignment -----" << std::endl;
-
-	try
-	{
-		Bureaucrat boss("Boss", 1);
-		RobotomyRequestForm original("Bender");
-		RobotomyRequestForm assigned("OldTarget");
-
-		boss.signForm(original);
-
-		RobotomyRequestForm copied(original);
-
-		std::cout << "Original: " << original << std::endl;
-		std::cout << "Copied: " << copied << std::endl;
-		std::cout << "Before assignment: " << assigned << std::endl;
-
-		assigned = original;
-
-		std::cout << "After assignment: " << assigned << std::endl;
-
-		boss.executeForm(copied);
-		boss.executeForm(assigned);
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-
-	std::cout << "\n----- Pardon copy and assignment -----" << std::endl;
-
-	try
-	{
-		Bureaucrat boss("Boss", 1);
-		PresidentialPardonForm original("Arthur");
-		PresidentialPardonForm assigned("Ford");
-
-		boss.signForm(original);
-
-		PresidentialPardonForm copied(original);
-
-		std::cout << "Original: " << original << std::endl;
-		std::cout << "Copied: " << copied << std::endl;
-		std::cout << "Before assignment: " << assigned << std::endl;
-
-		assigned = original;
-
-		std::cout << "After assignment: " << assigned << std::endl;
-
-		boss.executeForm(copied);
-		boss.executeForm(assigned);
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-
-	std::cout << "\n----- Execute through AForm pointer -----" << std::endl;
-
-	AForm* form = NULL;
-
-	try
-	{
-		Bureaucrat boss("Boss", 1);
-
-		form = new PresidentialPardonForm("Trillian");
-
-		std::cout << *form << std::endl;
-
-		boss.signForm(*form);
-		boss.executeForm(*form);
-	}
-	catch(const std::exception& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-	delete form;
+	delete unknown;
 
 	return(0);
 }
