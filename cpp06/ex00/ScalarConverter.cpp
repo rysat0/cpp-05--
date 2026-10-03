@@ -275,9 +275,72 @@ namespace
 		std::cout << "float: " << f << "f\n" << "double: " << d << std::endl;
 	}
 
+	std::string formatFloating(double value, int precision)
+	{
+		std::ostringstream output;
+
+		output << std::setprecision(precision) << value;
+
+		std::string result = output.str();
+
+		if(result.find_first_of(".eE") == std::string::npos)
+			result += ".0";
+
+		return (result);
+	}
+
 	void convertDouble(const std::string& literal)
 	{
-		
+		std::istringstream input(literal);
+		double d;
+
+		if(!(input >> d))
+		{
+			std::cout << "char: impossible\n" << "int: impossible\n" << "float: impossible\n" << "double: impossible" << std::endl;
+			return;
+		}
+
+		double roundd;
+
+		if(d < 0)
+			roundd = std::ceil(d);
+		else
+			roundd = std::floor(d);
+
+		//char
+		if(roundd < std::numeric_limits<char>::min() || roundd > std::numeric_limits<char>::max())
+			std::cout << "char: impossible" << std::endl;
+		else
+		{
+			char c = static_cast<char>(d);
+
+			if(std::isprint(static_cast<unsigned char>(c)))
+				std::cout << "char: '" << c << "'" << std::endl;
+			else
+				std::cout << "char: Non displayable" << std::endl;
+		}
+
+		//int
+		if(roundd < std::numeric_limits<int>::min() || roundd > std::numeric_limits<int>::max())
+			std::cout << "int: impossible" << std::endl;
+		else
+		{
+			int n = static_cast<int>(d);
+			std::cout << "int: " << n << std::endl;
+		}
+
+		//float
+		if(d < -(std::numeric_limits<float>::max()) || d > std::numeric_limits<float>::max())
+			std::cout << "float: impossible" << std::endl;
+		else
+		{
+			float f = static_cast<float>(d);
+
+			std::cout << "float: " << formatFloating(f, std::numeric_limits<float>::digits10) << "f" << std::endl;
+		}
+		//double
+		std::cout << "double: " << formatFloating(d, std::numeric_limits<double>::digits10) << std::endl;
+
 	}
 
 }
