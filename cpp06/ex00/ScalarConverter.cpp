@@ -147,7 +147,7 @@ namespace
 		float f;
 		double d;
 
-		if(literal[literal.size() - 1] == 'f')
+		if(literal == "nanf" || literal == "+inff" || literal == "-inff")
 		{
 			if(literal == "nanf")
 				f = std::numeric_limits<float>::quiet_NaN();
@@ -169,8 +169,11 @@ namespace
 
 			f = static_cast<float>(d);
 		}
-		std::cout << "char: impossible\n" << "int: impossible\n"
-			<< "float: " << f << "f\n" << "double: " << d << std::endl;
+		std::cout << "char: impossible\n" << "int: impossible" << std::endl;
+		if(literal == "+inf" || literal == "+inff")
+			std::cout << "float: +" << f << "f\n" << "double: +" << d << std::endl;
+		else
+			std::cout << "float: " << f << "f\n" << "double: " << d << std::endl;
 	}
 
 	void convertChar(const std::string& literal)
@@ -181,7 +184,7 @@ namespace
 		float f = static_cast<float>(c);
 		double d = static_cast<double>(c);
 
-		std::cout << "char: " << c << "f\n" << "int: " << n << std::endl;
+		std::cout << "char: '" << c << "'\n" << "int: " << n << std::endl;
 		std::cout << std::fixed << std::setprecision(1);
 		std::cout << "float: " << f << "f\n" << "double: " << d << std::endl;
 	}
@@ -202,7 +205,7 @@ namespace
 		else
 		{
 			char c = static_cast<char>(n);
-			char uc = static_cast<unsigned char>(n);
+			unsigned char uc = static_cast<unsigned char>(n);
 
 			if(std::isprint(uc))
 				std::cout<<"char: '" << c << "'" << std::endl;
