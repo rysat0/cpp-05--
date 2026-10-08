@@ -6,7 +6,7 @@ RM = rm -f
 
 SRCS = main.cpp Serializer.cpp
 
-HEADERS = Serializer.hpp
+HEADERS = Serializer.hpp Data.hpp
 
 OBJS = $(SRCS:.cpp=.o)
 

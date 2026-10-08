@@ -3,7 +3,7 @@
 
 #include <string>
 
-class Data
+struct Data
 {
 	int id;
 	std::string name;
