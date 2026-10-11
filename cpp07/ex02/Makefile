@@ -6,7 +6,7 @@ RM = rm -f
 
 SRCS = main.cpp
 
-HEADERS = Array.hpp
+HEADERS = Array.hpp Array.tpp
 
 OBJS = $(SRCS:.cpp=.o)
 
