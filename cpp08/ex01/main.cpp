@@ -1,5 +1,34 @@
 #include "Span.hpp"
-#include <string>
+
+#include <iostream>
+#include <vector>
+#include <list>
+#include <climits>
+#include <exception>
+
+
+void printSpans(const Span& sp)
+{
+	try
+	{
+		unsigned int shortest = sp.shortestSpan();
+		std::cout << "Shortest: " << shortest << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		std::cout << "Shortest exception: " << e.what() << std::endl;
+	}
+
+	try
+	{
+		unsigned int longest = sp.longestSpan();
+		std::cout << "Longest: " << longest << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		std::cout << "Longest exception: " << e.what() << std::endl;
+	}
+}
 
 
 int main()
