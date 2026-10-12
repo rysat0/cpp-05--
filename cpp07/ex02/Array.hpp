@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <exception>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 template <typename T>
 class Array
