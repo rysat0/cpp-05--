@@ -26,7 +26,7 @@ int main()
 
 
 
-	std::cout << "----- First num search test -----" << std::endl;
+	std::cout << "\n----- First num search test -----" << std::endl;
 
 	intResult = easyfind(nums, 1);
 
@@ -36,7 +36,7 @@ int main()
 		std::cout << "Not found" << std::endl;
 
 
-	std::cout << "----- last num search test -----" << std::endl;
+	std::cout << "\n----- last num search test -----" << std::endl;
 
 	intResult = easyfind(nums, 999);
 
@@ -47,7 +47,7 @@ int main()
 
 
 
-	std::cout << "----- non existing num search test -----" << std::endl;
+	std::cout << "\n----- non existing num search test -----" << std::endl;
 
 	intResult = easyfind(nums, 500);
 
@@ -56,6 +56,38 @@ int main()
 	else
 		std::cout << "Not found" << std::endl;
 
+
+	std::list<int> numList;
+	std::list<int>::iterator listIte;
+
+
+	std::cout << "\n----- empty container test -----" << std::endl;
+	listIte = easyfind(numList, 1);
+
+	if(listIte != numList.end())
+		std::cout << "found: " << *listIte << std::endl;
+	else
+		std::cout << "Not found" << std::endl;
+
+
+
+	std::cout << "\n----- first occurrence test -----" << std::endl;
+
+	numList.push_back(10);//begin()
+	numList.push_back(100);
+	numList.push_back(10);
+	numList.push_back(5678);//end() - 1
+
+	listIte = easyfind(numList, 10);
+
+	if(listIte != numList.end())
+	{
+		std::cout << "found: " << *listIte << std::endl;
+		if(listIte == numList.begin())
+			std::cout << "first occurrence!" << std::endl;
+	}
+	else
+		std::cout << "Not found" << std::endl;
 
 	return(0);
 }
