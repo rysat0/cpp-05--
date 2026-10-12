@@ -14,56 +14,50 @@ Array<T>::Array(unsigned int n): _elements(new T[n] ()), _len(n)
 template <typename T>
 Array<T>::Array(const Array<T>& other) :_elements(new T[other._len]), _len(other._len)
 {
-	unsigned int i = 0;
+    try
+    {
+        unsigned int i = 0;
 
-	while(i < other._len)
-	{
-		this->_elements[i] = other._elements[i];
-		++i;
-	}
+	    while(i < other._len)
+	    {
+	    	this->_elements[i] = other._elements[i];
+	    	++i;
+	    }
+    }
+    catch(...)
+    {
+        delete[] this->_elements;
+        throw;
+    }
 }
 
 template <typename T>
 Array<T>& Array<T>::operator=(const Array<T>& other)
 {
-	if(other == this)
-		return(this);
-	this->_elements = new T[this->_len];
+	if(this == &other)
+		return(*this);
 
-	unsigned int i = 0;
+	T* newElements = new T[other._len];
 
-	while(i < this->_elements)
+    try
+    {
+        unsigned int i = 0;
 
-}
+	    while(i < other._len)
+        {
+            newElements[i] = other._elements[i];
+            i++;
+        }
+    }
+    catch(...)
+    {
+        delete[] newElements;
+        throw;
+    }
 
-
-template <typename T>
-Array<T>::Array()
-    : elements(NULL), len(0)
-{
-}
-
-template <typename T>
-Array<T>::Array(unsigned int n)
-    : elements(/* n個確保して値初期化 */), len(n)
-{
-}
-
-template <typename T>
-Array<T>::Array(const Array<T>& other)
-    : elements(/* other.len個確保 */), len(other.len)
-{
-    // 全要素をコピー
-}
-
-template <typename T>
-Array<T>& Array<T>::operator=(const Array<T>& other)
-{
-    // 自己代入を確認
-    // 新しい領域を確保
-    // 全要素をコピー
-    // 古い領域を解放
-    // elementsとlenを更新
+    delete[] this->_elements;
+    this->_elements = newElements;
+    this->_len = other._len;
 
     return *this;
 }
@@ -71,25 +65,27 @@ Array<T>& Array<T>::operator=(const Array<T>& other)
 template <typename T>
 Array<T>::~Array()
 {
-    // delete[]
+    delete[] this->_elements;
 }
 
 template <typename T>
 T& Array<T>::operator[](unsigned int index)
 {
-    // index >= lenなら例外
-    // elements[index]を返す
+    if(index >= this->_len)
+        throw std::exception();
+    return this->_elements[index];
 }
 
 template <typename T>
 const T& Array<T>::operator[](unsigned int index) const
 {
-    // index >= lenなら例外
-    // elements[index]を返す
+    if(index >= this->_len)
+        throw std::exception();
+    return(this->_elements[index]);
 }
 
 template <typename T>
 unsigned int Array<T>::size() const
 {
-    // lenを返す
+    return (this->_len);
 }
