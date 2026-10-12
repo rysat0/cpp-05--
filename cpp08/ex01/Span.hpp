@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <stdexcept>
 
 class Span
 {
@@ -30,7 +31,15 @@ class Span
 template <typename It>
 void Span::addNums(It first, It last)
 {
+	std::vector<int> incomingVector(first, last);
 
+	if(incomingVector.size() > (this->N - this->_nums.size()))
+		throw std::overflow_error("Span doesn't have enough space");
+
+	//arg1. beginning position to be added
+	//arg2. beginning position of Array that is going to add
+	//arg3. end position of Array that is going to add
+	this->_nums.insert(this->_nums.end(), incomingVector.begin(), incomingVector.end());
 }
 
 
