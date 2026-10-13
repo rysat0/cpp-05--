@@ -23,7 +23,7 @@ Container::iteratorはstd::vector<int>::iteratorと等しい
 // inherit std::stack let us to use std::stack standard functions
 //dequeはdouble ended queueの略で、前後から触れるque。この場合は指定なしの場合のデフォコンテナをdequeとしている。
 // std::stack自体が2つのテンプレート引数があるのでここでも2つ指定して継承している
-// 
+//
 template <typename T, typename Container = std::deque<T> >
 class MutantStack : public std::stack<T, Container>
 {
@@ -36,20 +36,20 @@ class MutantStack : public std::stack<T, Container>
 
 		MutantStack();
 		MutantStack(const MutantStack& other);
-		MutantStack& operator=(MutantStack& other);
+		MutantStack& operator=(const MutantStack& other);
 		~MutantStack();
 
 		iterator begin();
 		iterator end();
 
-		const_iterator begin();
-		const_iterator end();
+		const_iterator begin() const;
+		const_iterator end() const;
 
-		reverse_iterator begin();
-		reverse_iterator end();
+		reverse_iterator rbegin();
+		reverse_iterator rend();
 
-		const_reverse_iterator begin();
-		const_reverse_iterator end();
+		const_reverse_iterator rbegin() const;
+		const_reverse_iterator rend() const;
 };
 
 #include "MutantStack.tpp"
