@@ -41,6 +41,20 @@ namespace
 
 	bool isChar(const std::string& literal)
 	{
+		// quoted character: '3', 'a', ' '
+		if(literal.size() == 3 && literal[0] == '\'' && literal[2] == '\'')
+		{
+			unsigned char c = static_cast<unsigned char>(literal[1]);
+
+			if(literal[1] == '\'' || literal[1] == '\\')
+				return(false);
+			if(std::isprint(c) == false)
+				return(false);
+
+			return(true);
+		}
+
+		// single character without quotes
 		if(literal.size() != 1)
 			return(false);
 
@@ -178,7 +192,12 @@ namespace
 
 	void convertChar(const std::string& literal)
 	{
-		char c = literal[0];
+		char c;
+
+		if(literal.size() == 3)
+			c = literal[1];
+		else
+			c = literal[0];
 
 		int n = static_cast<int>(c);
 		float f = static_cast<float>(c);
