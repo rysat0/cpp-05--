@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <deque>
+#include <string>
+#include <climits>
+#include <stdexcept>
 
 class PmergeMe
 {
