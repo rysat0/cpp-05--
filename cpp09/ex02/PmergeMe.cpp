@@ -38,13 +38,13 @@ namespace
 			if(text[i] < '0' || text[i] > '9')
 				throw std::runtime_error("Error: invalid input");
 
-				int digit = text[i] - '0';
+			int digit = text[i] - '0';
 
-				if(value > (INT_MAX - digit) / 10)
-					throw std::runtime_error("Error: integer overflow");
+			if(value > (INT_MAX - digit) / 10)
+				throw std::runtime_error("Error: integer overflow");
 
-				value = value * 10 + digit;
-				++i;
+			value = value * 10 + digit;
+			++i;
 		}
 		if(value == 0)
 			throw std::runtime_error("Error: value must be positive");
@@ -55,9 +55,119 @@ namespace
 }
 
 
+// chain内->識別番号
+// this->_vector[chain[middle]] -> 識別番号に対応する実際の値
+void PmergeMe::insertVectorIndex(std::vector<std::size_t>& chain, std::size_t index, std::size_t bound) const
+{
+	std::size_t left = 0;
+	std::size_t right = bound;
+
+	while(left < right)
+	{
+		std::size_t middle = left + (right - left) / 2;
+
+		if(this->_vector[chain[middle]] < this->_vector[index])
+			left = middle + 1;
+		else
+			right = middle;
+	}
+	chain.insert(chain.begin() + left, index);
+}
 
 
+// indices -> prural form of index
+// this function handle "index of each number in original vector", not the original number itself
+// returns vector that contains sorted indices
+// last const means this function won't change original vector contains original numbers
+std::vector<std::size_t> PmergeMe::sortVectorIndices(const std::vector<std::size_t>& indices) const
+{
+	// index is 0 or 1 -> already sorted
+	if(indices.size() < 2)
+		return(indices);
 
+	// "larger" memorizes larger nums in each pair comparison
+	std::vector<std::size_t> larger;
+	// "partner" memorize smaller nums by using larger num for index of this vector
+	std::vector<std::size_t> partner(this->_vector.size());
+	std::size_t i = 0;
+	std::size_t tmp = 0;
+
+	// compare nums between 2 (with num next to num now), memorize "which is larger", "what num is partner(comparison opponent)"
+	while(i + 1 < indices.size())
+	{
+		std::size_t small = indices[i];
+		std::size_t large = indices[i + 1];
+
+
+		if(this->_vector[small] > this->_vector[large])
+		{
+			tmp = small;
+			small = large;
+			large = tmp;
+		}
+
+		larger.push_back(large);
+		partner[large] = small;
+		i += 2;
+	}
+
+	// recursive call to sort "larger" side til larger.size() become under 2 -> larger sorted
+	larger = sortVectorIndices(larger);
+
+	std::vector<std::size_t> pending;
+	i = 0;
+
+	while(i < larger.size())
+	{
+		// adding small nums by sorted large num indices
+		pending.push_back(partner[larger[i]]);
+		++i;
+	}
+
+	// odd num -> there is one num doesn't have pair -> add to pending
+	// .back() retuens last elements of that vector
+	if(indices.size() % 2 == 1)
+		pending.push_back(indices.back());
+
+	// chain -> copied vector from sorted large nums
+	// insert small num(first num in pending)
+	std::vector<std::size_t> chain(larger);
+	chain.insert(chain.begin(), pending[0]);
+
+	std::size_t previous = 1;
+	std::size_t current = 3;
+	std::size_t end;
+
+	while(previous < pending.size())
+	{
+		end = current;
+		if(end > pending.size())
+			end = pending.size();
+
+		i = end;
+		while(i > previous)
+		{
+			std::size_t position = i - 1;
+			std::size_t bound = chain.size();
+
+			if(position < larger.size())
+			{
+				bound = 0;
+				while(bound < chain.size() && chain[bound] != larger[position])
+					++bound;
+			}
+			insertVectorIndex(chain, pending[position], bound);
+			--i;
+		}
+		if(end == pending.size())
+			break;
+		std::size_t next = current + 2 * previous;
+		previous = current;
+		current = next;
+	}
+	return(chain);
+
+}
 
 void PmergeMe::sortVector()
 {
