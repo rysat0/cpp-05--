@@ -130,14 +130,17 @@ std::vector<std::size_t> PmergeMe::sortVectorIndices(const std::vector<std::size
 		pending.push_back(indices.back());
 
 	// chain -> copied vector from sorted large nums
-	// insert small num(first num in pending)
+	// insert small num(first num in pending) before smallest num in larger vector
 	std::vector<std::size_t> chain(larger);
 	chain.insert(chain.begin(), pending[0]);
 
+	//"previous" -> Up to which element (index) of the "small vector" has the insertion into the "chain" been completed
+	//"current" -> In this comparison, up to which index within the "small vector" should be included as a target for comparison
 	std::size_t previous = 1;
 	std::size_t current = 3;
 	std::size_t end;
 
+	// still has to compare nums or not
 	while(previous < pending.size())
 	{
 		end = current;
@@ -147,12 +150,15 @@ std::vector<std::size_t> PmergeMe::sortVectorIndices(const std::vector<std::size
 		i = end;
 		while(i > previous)
 		{
+			//"bound" -> The end of the search range in a binary search
 			std::size_t position = i - 1;
 			std::size_t bound = chain.size();
 
+			// if pair is existing
 			if(position < larger.size())
 			{
 				bound = 0;
+				// search what index does partner have -> will become end of binary search
 				while(bound < chain.size() && chain[bound] != larger[position])
 					++bound;
 			}
@@ -161,6 +167,7 @@ std::vector<std::size_t> PmergeMe::sortVectorIndices(const std::vector<std::size
 		}
 		if(end == pending.size())
 			break;
+		// use Jacobsthal number to make clculate more faster ... J[0] = 0, J[1] = 1, J[n] = J[n-1] + 2*J[n-2]
 		std::size_t next = current + 2 * previous;
 		previous = current;
 		current = next;
