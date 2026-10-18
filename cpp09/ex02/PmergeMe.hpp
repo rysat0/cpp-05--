@@ -6,6 +6,7 @@
 #include <string>
 #include <climits>
 #include <stdexcept>
+#include <cstddef>
 
 class PmergeMe
 {

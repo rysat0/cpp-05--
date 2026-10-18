@@ -141,15 +141,18 @@ std::vector<std::size_t> PmergeMe::sortVectorIndices(const std::vector<std::size
 	std::size_t end;
 
 	// still has to compare nums or not
+	//ヤコブスタール数の計算による、前の周で比較できるpending[]の最大のIndexがpreviousに入るので、それが実際のサイズを上回ったら全比較完了
 	while(previous < pending.size())
 	{
 		end = current;
+		//比較回数最適化の際にヤコブスタール数に則りグループ分けを行い、内側のループでそのグループ分けされた要素数全て比較しようとするので、実際に存在するIndex数で切り詰めないと要素外アクセスが発生する
 		if(end > pending.size())
 			end = pending.size();
 
 		i = end;
 		while(i > previous)
 		{
+			// "pending" -> 今回挿入したい要素のIndex
 			//"bound" -> The end of the search range in a binary search
 			std::size_t position = i - 1;
 			std::size_t bound = chain.size();
@@ -178,6 +181,29 @@ std::vector<std::size_t> PmergeMe::sortVectorIndices(const std::vector<std::size
 
 void PmergeMe::sortVector()
 {
+	std::vector<std::size_t> indices;
+	std::size_t i = 0;
+
+	while(i < this->_vector.size())
+	{
+		// Indexの配列を用意
+		indices.push_back(i);
+		++i;
+	}
+
+	indices = sortVectorIndices(indices);
+
+	std::vector<int> sorted;
+	i = 0;
+
+	while(i < indices.size())
+	{
+		//添字配列からそれに対応していたオリジナルの配列の数値に戻す
+		sorted.push_back(this->_vector[indices[i]]);
+		++i;
+	}
+
+	this->_vector.swap(sorted);
 
 }
 void PmergeMe::sortDeque()
