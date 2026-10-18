@@ -74,6 +74,23 @@ void PmergeMe::insertVectorIndex(std::vector<std::size_t>& chain, std::size_t in
 	chain.insert(chain.begin() + left, index);
 }
 
+void PmergeMe::insertDequeIndex(std::deque<std::size_t>& chain, std::size_t index, std::size_t bound) const
+{
+	std::size_t left = 0;
+	std::size_t right = bound;
+
+	while(left < right)
+	{
+		std::size_t middle = left + (right - left) / 2;
+
+		if(this->_deque[chain[middle]] < this->_deque[index])
+			left = middle + 1;
+		else
+			right = middle;
+	}
+	chain.insert(chain.begin() + left, index);
+}
+
 
 // indices -> prural form of index
 // this function handle "index of each number in original vector", not the original number itself
@@ -179,6 +196,87 @@ std::vector<std::size_t> PmergeMe::sortVectorIndices(const std::vector<std::size
 
 }
 
+std::deque<std::size_t> PmergeMe::sortDequeIndices(const std::deque<std::size_t>& indices) const
+{
+	if(indices.size() < 2)
+		return(indices);
+
+	std::deque<std::size_t> larger;
+	std::deque<std::size_t> partner(this->_deque.size());
+	std::size_t i = 0;
+	std::size_t tmp = 0;
+
+	while(i + 1 < indices.size())
+	{
+		std::size_t small = indices[i];
+		std::size_t large = indices[i + 1];
+
+
+		if(this->_deque[small] > this->_deque[large])
+		{
+			tmp = small;
+			small = large;
+			large = tmp;
+		}
+
+		larger.push_back(large);
+		partner[large] = small;
+		i += 2;
+	}
+
+	larger = sortDequeIndices(larger);
+
+	std::deque<std::size_t> pending;
+	i = 0;
+
+	while(i < larger.size())
+	{
+		pending.push_back(partner[larger[i]]);
+		++i;
+	}
+
+	if(indices.size() % 2 == 1)
+		pending.push_back(indices.back());
+
+	std::deque<std::size_t> chain(larger);
+	chain.insert(chain.begin(), pending[0]);
+
+	std::size_t previous = 1;
+	std::size_t current = 3;
+	std::size_t end;
+
+	while(previous < pending.size())
+	{
+		end = current;
+
+		if(end > pending.size())
+			end = pending.size();
+
+		i = end;
+		while(i > previous)
+		{
+			std::size_t position = i - 1;
+			std::size_t bound = chain.size();
+
+			if(position < larger.size())
+			{
+				bound = 0;
+				while(bound < chain.size() && chain[bound] != larger[position])
+					++bound;
+			}
+			insertDequeIndex(chain, pending[position], bound);
+			--i;
+		}
+		if(end == pending.size())
+			break;
+
+		std::size_t next = current + 2 * previous;
+		previous = current;
+		current = next;
+	}
+	return(chain);
+}
+
 void PmergeMe::sortVector()
 {
 	std::vector<std::size_t> indices;
@@ -208,7 +306,29 @@ void PmergeMe::sortVector()
 }
 void PmergeMe::sortDeque()
 {
+	std::deque<std::size_t> indices;
+	std::size_t i = 0;
 
+	while(i < this->_deque.size())
+	{
+		// Indexの配列を用意
+		indices.push_back(i);
+		++i;
+	}
+
+	indices = sortDequeIndices(indices);
+
+	std::deque<int> sorted;
+	i = 0;
+
+	while(i < indices.size())
+	{
+		//添字配列からそれに対応していたオリジナルの配列の数値に戻す
+		sorted.push_back(this->_deque[indices[i]]);
+		++i;
+	}
+
+	this->_deque.swap(sorted);
 }
 
 void PmergeMe::loadVector(int argc, char **argv)

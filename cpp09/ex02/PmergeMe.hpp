@@ -23,6 +23,9 @@ class PmergeMe
 		std::vector<std::size_t> sortVectorIndices(const std::vector<std::size_t>& indices) const;
 		void insertVectorIndex(std::vector<std::size_t>& chain, std::size_t index, std::size_t bound) const;
 
+		std::deque<std::size_t> sortDequeIndices(const std::deque<std::size_t>& indices) const;
+		void insertDequeIndex(std::deque<std::size_t>& chain, std::size_t index, std::size_t bound) const;
+
 	public:
 		PmergeMe();
 		PmergeMe(const PmergeMe& other);
