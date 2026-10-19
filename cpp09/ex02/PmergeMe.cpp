@@ -360,4 +360,49 @@ void PmergeMe::loadDeque(int argc, char **argv)
 
 void PmergeMe::run(int argc, char **argv)
 {
+	if(argc < 2)
+		throw std::runtime_error("Error: invalid input");
+
+	std::clock_t vectorStartTime = std::clock();
+	loadVector(argc, argv);
+	sortVector();
+	std::clock_t vectorEndTime = std::clock();
+
+	std::clock_t dequeStartTime = std::clock();
+	loadDeque(argc, argv);
+	sortDeque();
+	std::clock_t dequeEndTime = std::clock();
+
+	double vectorTime = static_cast<double>(vectorEndTime - vectorStartTime) / CLOCKS_PER_SEC * 1000000.0; // to micro second
+	double dequeTime = static_cast<double>(dequeEndTime - dequeStartTime) / CLOCKS_PER_SEC * 1000000.0;
+
+	int argument = 1;
+	std::cout << "Before: ";
+
+	while(argument < argc)
+	{
+		if(argument > 1)
+			std::cout << " ";
+		std::cout << argv[argument];
+		++argument;
+	}
+	std::cout << std::endl;
+
+	std::cout << "After: ";
+	std::size_t i = 0;
+
+	while(i < this->_vector.size())
+	{
+		if(i > 0)
+			std::cout << " ";
+		std::cout << this->_vector[i];
+		++i;
+	}
+	std::cout << std::endl;
+
+	//小数点以下3桁
+	std::cout << std::fixed << std::setprecision(3);
+
+	std::cout << "Time to process a range of " << this->_vector.size() << " elements with std::vector : " << vectorTime << " us" << std::endl;
+	std::cout << "Time to process a range of " << this->_deque.size() << " elements with std::deque : " << dequeTime << " us" << std::endl;
 }
